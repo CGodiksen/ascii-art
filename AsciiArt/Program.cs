@@ -1,6 +1,5 @@
 ﻿using System;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
+using System.Drawing;
 
 namespace AsciiArt
 {
@@ -10,10 +9,17 @@ namespace AsciiArt
         {
             // Creating the output directory.
             System.IO.Directory.CreateDirectory("output");
-            
-            using (Image image = Image.Load("ascii-pineapple.jpg"))
+
+            using (Bitmap image = new Bitmap("ascii-pineapple.jpg"))
             {
                 Console.WriteLine("Height: " + image.Height + "\nWidth: " + image.Width);
+                for (int x = 0; x < image.Height; x++)
+                {
+                    for (int y = 0; y < image.Width; y++)
+                    {
+                        Console.WriteLine($"{x} x {y}: {image.GetPixel(y, x)}");
+                    }
+                }
             }
         }
     }
