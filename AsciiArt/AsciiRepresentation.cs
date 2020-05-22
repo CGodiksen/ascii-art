@@ -2,7 +2,14 @@
 using System.Drawing;
 
 namespace AsciiArt
-{
+{   
+    public enum MappingMethod
+    {
+        Average,
+        MinMax,
+        Luminosity
+    }
+
     class AsciiRepresentation
     {
         private readonly Bitmap image;
@@ -28,8 +35,7 @@ namespace AsciiArt
             {
                 for (int y = 0; y < image.Width; y++)
                 {
-                    // Computing the brightness of the pixel as the average of the RBG values.
-                    int pixel_brightness = GetBrightness(image.GetPixel(y, x));
+                    int pixel_brightness = GetBrightness(image.GetPixel(y, x), MappingMethod.Average);
 
                     // Assigning an ASCII character to the pixel based on the brightness.
                     if (pixel_brightness == 0 || (65 / (255 / pixel_brightness)) - 1 == -1)
@@ -45,9 +51,22 @@ namespace AsciiArt
             return asciiArray;
         }
 
-        private int GetBrightness(Color pixel)
-        {
-            return (pixel.R + pixel.B + pixel.G) / 3;
+        // Maps the RGB value of the pixel to a single brightness value based on the given mapping method. 
+        private int GetBrightness(Color pixel, MappingMethod mappingMethod)
+        {   
+            if (mappingMethod.Equals(MappingMethod.Luminosity))
+            {
+                return (int)(0.21 * pixel.R + 0.72 * pixel.G + 0.07 * pixel.B);
+            }
+            else if (mappingMethod.Equals(MappingMethod.MinMax))
+            {   
+                return (Math.Max(pixel.R, Math.Max(pixel.B, pixel.G)) + Math.Min(pixel.R, Math.Min(pixel.B, pixel.G))) / 2;
+            }
+            else
+            {   
+                return (pixel.R + pixel.B + pixel.G) / 3;
+            }
+           
         }
         
         // Printing the ASCII representation of the image.
