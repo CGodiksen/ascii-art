@@ -7,33 +7,44 @@ namespace AsciiArt
     {
         static void Main(string[] args)
         {
-            // Creating the output directory.
-            System.IO.Directory.CreateDirectory("output");
+            // Resizing the image.
+            Bitmap original = (Bitmap)Image.FromFile("ascii-pineapple.jpg");
+            Bitmap image = new Bitmap(original, new Size(original.Width / 3, original.Height / 3));
+                
+            // Creating a string that contains 65 characters ordered from thinnest to boldest.
+            string asciiChars = "`^\",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
+                
+            // Creating a 2d array that will contain the ASCII representation of the image.
+            char[,] asciiRepresentation = new char[image.Height, image.Width];
 
-            using (Bitmap image = new Bitmap("ascii-pineapple.jpg"))
+            // Iterating through every pixel in the image.
+            for (int x = 0; x < image.Height; x++)
             {
-                // Creating a 2d array that will contain the brightness for each pixel in the image.
-                int[,] brightness = new int[image.Height, image.Width];
+                for (int y = 0; y < image.Width; y++)
+                {
+                    // Computing the brightness of the pixel as the average of the RBG values.
+                    Color pixel = image.GetPixel(y, x);
+                    int pixel_brightness = (pixel.R + pixel.B + pixel.G) / 3;
 
-                Console.WriteLine("Height: " + image.Height + "\nWidth: " + image.Width);
-                for (int x = 0; x < image.Height; x++)
-                {
-                    for (int y = 0; y < image.Width; y++)
+                    // Assigning an ASCII character to the pixel based on the brightness.
+                    if (pixel_brightness == 0 || (65 / (255 / pixel_brightness)) - 1 == -1)
                     {
-                        // Computing the brightness of the pixel as the average of the RBG values.
-                        Color pixel = image.GetPixel(y, x);
-                        brightness[x, y] = (pixel.R + pixel.B + pixel.G) / 3;
-                        
+                        asciiRepresentation[x, y] = asciiChars[0];
+                    }
+                    else
+                    {
+                        asciiRepresentation[x, y] = asciiChars[(65 / (255 / pixel_brightness)) - 1];
                     }
                 }
-                // Iterating through the 2d brightness array and printing each pixels brightness.
-                for (int i = 0; i < brightness.GetLength(0); i++)
-                {
-                    for (int j = 0; j < brightness.GetLength(1); j++)
-                    {
-                        Console.WriteLine(brightness[i, j]);
-                    }
+            }
+            // Printing the ASCII representation of the image.
+            for (int i = 0; i < asciiRepresentation.GetLength(0); i++)
+            {
+                for (int j = 0; j < asciiRepresentation.GetLength(1); j++)
+                {   
+                    Console.Write(asciiRepresentation[i, j]);
                 }
+                Console.Write("\n");
             }
         }
     }
