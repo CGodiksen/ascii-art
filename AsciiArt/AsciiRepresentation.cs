@@ -35,7 +35,7 @@ namespace AsciiArt
             {
                 for (int y = 0; y < image.Width; y++)
                 {
-                    int pixel_brightness = GetBrightness(image.GetPixel(y, x), MappingMethod.Average, true);
+                    int pixel_brightness = GetBrightness(image.GetPixel(y, x), MappingMethod.Average);
 
                     // Assigning an ASCII character to the pixel based on the brightness.
                     if (pixel_brightness == 0 || (65 / (255 / pixel_brightness)) - 1 == -1)
@@ -83,7 +83,11 @@ namespace AsciiArt
             {
                 for (int j = 0; j < asciiRepresentation.GetLength(1); j++)
                 {
-                    Console.Write(asciiRepresentation[i, j]);
+                    // Printing each character 3 times to avoid the ASCII representation looking squashed.
+                    for (int k = 0; k < 3; k++)
+                    {
+                        Console.Write(asciiRepresentation[i, j]);
+                    }
                 }
                 Console.Write("\n");
             }
