@@ -2,7 +2,7 @@
 using System.Drawing;
 
 namespace AsciiArt
-{   
+{
     public enum MappingMethod
     {
         Average,
@@ -14,7 +14,7 @@ namespace AsciiArt
     {
         private readonly Bitmap image;
         private readonly Char[,] asciiRepresentation;
-        
+
         public AsciiRepresentation(Bitmap image)
         {
             this.image = image;
@@ -22,14 +22,14 @@ namespace AsciiArt
             // Initializing the ASCII representation of the image.
             this.asciiRepresentation = InitializeAsciiArray();
         }
-        
+
         private char[,] InitializeAsciiArray()
         {
             // Creating a string that contains 65 characters ordered from thinnest to boldest.
             string asciiChars = "`^\",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
-            
+
             char[,] asciiArray = new char[image.Height, image.Width];
-            
+
             // Iterating through every pixel in the image.
             for (int x = 0; x < image.Height; x++)
             {
@@ -61,21 +61,21 @@ namespace AsciiArt
                 brightness = (int)(0.21 * pixel.R + 0.72 * pixel.G + 0.07 * pixel.B);
             }
             else if (mappingMethod.Equals(MappingMethod.MinMax))
-            {   
+            {
                 brightness = (Math.Max(pixel.R, Math.Max(pixel.B, pixel.G)) + Math.Min(pixel.R, Math.Min(pixel.B, pixel.G))) / 2;
             }
             else
-            {   
+            {
                 brightness = (pixel.R + pixel.B + pixel.G) / 3;
             }
-            
+
             if (invert)
             {
                 brightness = Math.Abs(brightness - 255);
             }
             return brightness;
         }
-        
+
         // Printing the ASCII representation of the image.
         public void PrintAsciiRepresentation()
         {
